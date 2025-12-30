@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDS 2026 | Grand Championship</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="background-glow"></div>
+
+    <nav class="navbar glass">
+        <div class="logo">EDS <span class="highlight">2026</span></div>
+        
+        <div class="menu-toggle" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </div>
+
+        <div class="nav-links" id="navLinks">
+            <button class="nav-btn active" onclick="switchTab('home')">Home</button>
+            <button class="nav-btn" id="regBtn" onclick="switchTab('register')">Register</button>
+            <button class="nav-btn" onclick="switchTab('challenges')">Challenges</button>
+            
+            <button class="nav-btn hidden" id="profileBtn" onclick="switchTab('profile')">
+                <i class="fas fa-user-circle"></i> Profile
+            </button>
+            
+            <button class="nav-btn logout-btn hidden" id="logoutBtn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </nav>
+
+    <main>
+        <section id="home" class="section active fade-in">
+            <div class="hero-content">
+                <span class="badge">Season 2</span>
+                <h1 class="main-title">Developer Championship <br> <span class="text-gradient">EDS 2026</span></h1>
+                
+                <div class="countdown-wrapper">
+                    <div class="time-card glass"><span id="days" class="time-num">00</span><span class="time-label">Days</span></div>
+                    <div class="time-card glass"><span id="hours" class="time-num">00</span><span class="time-label">Hours</span></div>
+                    <div class="time-card glass"><span id="minutes" class="time-num">00</span><span class="time-label">Mins</span></div>
+                    <div class="time-card glass"><span id="seconds" class="time-num">00</span><span class="time-label">Secs</span></div>
+                </div>
+
+                <p class="subtitle">Join the region's strongest coding battle. Prove your skills, claim the glory.</p>
+                
+                <div class="winner-showcase glass">
+                    <div class="trophy-icon"><i class="fas fa-trophy"></i></div>
+                    <div class="winner-text">
+                        <h3>HALL OF FAME</h3>
+                        <h2>Team X</h2>
+                        <p class="role">( L ) - Marawan Ahmed</p>
+                        <p class="desc">1st Place Winner - 2025 Edition</p>
+                    </div>
+                </div>
+
+                <div class="cta-group">
+                    <button class="btn primary" onclick="switchTab('register')">Register Team</button>
+                    <button class="btn secondary" onclick="switchTab('challenges')">Explore Challenges</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="login" class="section fade-in hidden">
+            <div class="container-narrow" style="max-width: 450px;">
+                <div class="section-header"><h2>Welcome Back</h2><p>Login to access dashboard</p></div>
+                <form class="register-form glass" onsubmit="handleLogin(event)">
+                    <div class="form-group"><label>Email Address</label><input type="email" placeholder="user@example.com" required></div>
+                    <div class="form-group"><label>Password</label><input type="password" placeholder="••••••••" required></div>
+                    <button type="submit" class="btn primary full-width">Login</button>
+                    <p class="auth-link">Don't have an account? <button type="button" onclick="switchTab('signup')">Sign up here</button></p>
+                </form>
+            </div>
+        </section>
+
+        <section id="signup" class="section fade-in hidden">
+            <div class="container-narrow" style="max-width: 450px;">
+                <div class="section-header"><h2>Create Account</h2><p>Join the community</p></div>
+                <form class="register-form glass" onsubmit="handleSignup(event)">
+                    <div class="form-group"><label>Full Name</label><input type="text" placeholder="John Doe" required></div>
+                    <div class="form-group"><label>Email Address</label><input type="email" placeholder="user@example.com" required></div>
+                    <div class="form-group"><label>Password</label><input type="password" id="spass" placeholder="••••••••" required></div>
+                    <div class="form-group"><label>Confirm Password</label><input type="password" id="spassConfirm" placeholder="••••••••" required></div>
+                    <button type="submit" class="btn primary full-width">Create Account</button>
+                    <p class="auth-link">Already have an account? <button type="button" onclick="switchTab('login')">Login here</button></p>
+                </form>
+            </div>
+        </section>
+
+        <section id="register" class="section fade-in hidden">
+            <div class="container-narrow">
+                <div class="section-header"><h2>Team Dashboard</h2><p>Manage your squad details</p></div>
+
+                <div id="teamStatusPanel" class="glass hidden" style="text-align: center; padding: 40px;">
+                    <div id="statusIcon" style="font-size: 4rem; margin-bottom: 20px;"></div>
+                    <h2 id="displayTeamName" style="color: white; margin-bottom: 10px;">Team Name</h2>
+                    <p id="displayStatusText" style="color: var(--text-gray); font-size: 1.2rem; margin-bottom: 30px;">Status Description</p>
+                    <div class="status-badge large" id="displayStatusBadge" style="display: inline-block; font-size: 1rem; padding: 10px 30px;">STATUS</div>
+                    <div style="margin-top: 40px; border-top: 1px solid var(--border-color); padding-top: 20px;">
+                        <p style="color: var(--text-gray); font-size: 0.9rem;"><i class="fas fa-info-circle"></i> You have already submitted a team. You cannot create another one.</p>
+                    </div>
+                </div>
+
+                <form id="creationForm" class="register-form glass">
+                    <h3 class="form-title"><i class="fas fa-users-cog"></i> Team Info</h3>
+                    <div class="form-group"><label>Team Name</label><input type="text" id="regTeamName" placeholder="e.g. The Code Warriors"></div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Main Email</label><input type="email" id="regTeamEmail" placeholder="team@example.com"></div>
+                        <div class="form-group">
+                            <label>Track</label>
+                            <select id="regTeamTrack">
+                                <option>Backend Development</option>
+                                <option>Frontend & UI/UX</option>
+                                <option>AI & Data Science</option>
+                                <option>Cyber Security</option>
+                            </select>
+                        </div>
+                    </div>
+                    <hr class="divider">
+                    <h3 class="form-title"><i class="fas fa-user-astronaut"></i> Squad Members</h3>
+                    <div class="members-grid">
+                        <div class="form-group member-card leader-box">
+                            <label class="leader-label"><i class="fas fa-crown"></i> Team Leader</label>
+                            <input type="text" id="regLeaderName" placeholder="Full Name">
+                            <input type="tel" placeholder="Phone">
+                        </div>
+                        <div class="form-group member-card"><label>Member 02</label><input type="text" placeholder="Full Name"></div>
+                        <div class="form-group member-card"><label>Member 03</label><input type="text" placeholder="Full Name"></div>
+                        <div class="form-group member-card"><label>Member 04</label><input type="text" placeholder="Full Name"></div>
+                    </div>
+                    <button type="button" class="btn primary full-width" onclick="registerNewTeam()">Confirm Registration</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="profile" class="section fade-in hidden">
+            <div class="container-narrow" style="max-width: 600px;">
+                <div class="section-header">
+                    <h2>My Profile</h2>
+                    <p>Update your personal information</p>
+                </div>
+
+                <div class="glass" style="padding: 40px; text-align: center;">
+                    <div class="profile-upload-container">
+                        <div class="profile-img-wrapper" onclick="document.getElementById('profileUpload').click()">
+                            <img id="profileImagePreview" src="https://via.placeholder.com/150" alt="Profile">
+                            <div class="upload-overlay">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                        </div>
+                        <input type="file" id="profileUpload" hidden accept="image/*" onchange="previewProfileImage(event)">
+                    </div>
+
+                    <h3 id="profileNameDisplay" style="margin: 15px 0 30px; color: var(--gold-color);">User Name</h3>
+
+                    <form onsubmit="updateUserProfile(event)" style="text-align: left;">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" id="editProfileName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email (Read Only)</label>
+                            <input type="email" id="editProfileEmail" readonly style="opacity: 0.6; cursor: not-allowed;">
+                        </div>
+                        <div class="form-group">
+                            <label>New Password (Optional)</label>
+                            <input type="password" id="editProfilePass" placeholder="Leave empty to keep current">
+                        </div>
+                        
+                        <button type="submit" class="btn primary full-width">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section id="challenges" class="section fade-in hidden">
+            <div class="container">
+                <div class="section-header"><h2>Challenge Arena</h2><p>Select your mission</p></div>
+                <div class="cards-grid" id="challengesGrid">
+                    <p style="grid-column: 1/-1; text-align: center;">Loading Challenges...</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="challenge-details" class="section fade-in hidden">
+            <div class="container-narrow">
+                <button onclick="switchTab('challenges')" style="background:none; border:none; color:var(--text-gray); cursor:pointer; margin-bottom: 20px; font-size: 1.1rem;">
+                    <i class="fas fa-arrow-left"></i> Back to Challenges
+                </button>
+                <div class="glass" style="padding: 40px;">
+                    <div class="section-header" style="text-align: left; margin-bottom: 20px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span id="detailBadge" class="tag hard">HARD</span>
+                            <span id="detailPoints" class="points" style="color:var(--gold-color); font-weight:bold;">500 XP</span>
+                        </div>
+                        <h1 id="detailTitle" style="font-size: 2.5rem; margin-top: 15px;">Challenge Title</h1>
+                    </div>
+                    <p id="detailDesc" style="color: var(--text-gray); font-size: 1.1rem; line-height: 1.8; margin-bottom: 30px;">Description goes here...</p>
+                    <h3 style="color: var(--primary-color); margin-bottom: 15px;">Requirements:</h3>
+                    <ul id="detailReqs" style="list-style: none; padding: 0; margin-bottom: 30px; color: white;"></ul>
+                    <button class="btn primary full-width">Submit Solution</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="admin" class="section fade-in hidden">
+            <div class="container">
+                <div class="section-header"><h2 style="color: var(--primary-color)">Control Panel</h2><p>Welcome back, Admin.</p></div>
+                
+                <div style="margin-bottom: 20px; text-align: right;">
+                    <button class="btn primary" onclick="openAddChallengeModal()">
+                        <i class="fas fa-plus"></i> Add New Challenge
+                    </button>
+                </div>
+
+                <div class="cards-grid" style="margin-bottom: 40px;">
+                    <div class="card glass" style="text-align: center;"><h3 style="font-size: 3rem; color: var(--gold-color);">0</h3><p>Teams</p></div>
+                    <div class="card glass" style="text-align: center;"><h3 style="font-size: 3rem; color: var(--primary-color);">0</h3><p>Participants</p></div>
+                    <div class="card glass" style="text-align: center;"><h3 style="font-size: 3rem; color: #00ff7f;">0</h3><p>Pending</p></div>
+                </div>
+                <div class="glass" style="padding: 20px; overflow-x: auto;">
+                    <h3 style="margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">Recent Registrations</h3>
+                    <table class="admin-table">
+                        <thead><tr><th>#ID</th><th>Team Name</th><th>Leader</th><th>Track</th><th>Status</th><th>Action</th></tr></thead>
+                        <tbody id="adminTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+    <div id="teamModal" class="modal-overlay">
+        <div class="modal-content glass">
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+            <div class="modal-header">
+                <h2 id="modalTeamName">Team Name</h2>
+                <span id="modalStatus" class="status-badge">STATUS</span>
+            </div>
+            <div class="modal-body">
+                <p><strong><i class="fas fa-crown"></i> Leader:</strong> <span id="modalLeader">Name</span></p>
+                <p><strong><i class="fas fa-code-branch"></i> Track:</strong> <span id="modalTrack">Track</span></p>
+                <p><strong><i class="fas fa-envelope"></i> Email:</strong> <span id="modalEmail">email@example.com</span></p>
+                <hr class="divider">
+                <h3>Squad Members</h3>
+                <ul id="modalMembers" class="members-list"></ul>
+            </div>
+            <div class="modal-footer">
+                <button class="btn primary" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="addChallengeModal" class="modal-overlay">
+        <div class="modal-content glass">
+            <button class="close-modal" onclick="closeAddChallengeModal()">&times;</button>
+            <div class="modal-header">
+                <h2>Add New Challenge</h2>
+            </div>
+            <form onsubmit="saveChallenge(event)">
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" id="chTitle" required placeholder="e.g. System Design">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Difficulty</label>
+                        <select id="chDiff">
+                            <option value="easy">Easy</option>
+                            <option value="medium">Medium</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Points (XP)</label>
+                        <input type="number" id="chPoints" required placeholder="100">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" id="chDesc" required placeholder="Short description...">
+                </div>
+                <div class="form-group">
+                    <label>Requirements (comma separated)</label>
+                    <input type="text" id="chReqs" required placeholder="Diagram, Code, PDF...">
+                </div>
+                <div class="form-group">
+                    <label>Tag</label>
+                    <input type="text" id="chTag" required placeholder="e.g. Backend">
+                </div>
+                <button type="submit" class="btn primary full-width">Publish Challenge</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="editChallengeModal" class="modal-overlay">
+        <div class="modal-content glass">
+            <button class="close-modal" onclick="closeEditChallengeModal()">&times;</button>
+            <div class="modal-header">
+                <h2>Edit Challenge</h2>
+            </div>
+            <form onsubmit="updateChallenge(event)">
+                <input type="hidden" id="editChId">
+                <div class="form-group"><label>Title</label><input type="text" id="editChTitle" required></div>
+                <div class="form-row">
+                    <div class="form-group"><label>Difficulty</label><select id="editChDiff"><option value="easy">Easy</option><option value="medium">Medium</option><option value="hard">Hard</option></select></div>
+                    <div class="form-group"><label>Points</label><input type="number" id="editChPoints" required></div>
+                </div>
+                <div class="form-group"><label>Description</label><input type="text" id="editChDesc" required></div>
+                <div class="form-group"><label>Requirements</label><input type="text" id="editChReqs" required></div>
+                <div class="form-group"><label>Tag</label><input type="text" id="editChTag" required></div>
+                <button type="submit" class="btn primary full-width">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <footer class="glass-footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="logo">EDS <span class="highlight">2025</span></div>
+                    <p>The ultimate battleground for developers in the Middle East. Code, Compete, Conquer.</p>
+                </div>
+                <div class="footer-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#" onclick="switchTab('home')">Home</a></li>
+                        <li><a href="#" onclick="switchTab('register')">Register Team</a></li>
+                        <li><a href="#" onclick="switchTab('challenges')">Challenges</a></li>
+                        <li><a href="#">Rulebook</a></li>
+                    </ul>
+                </div>
+                <div class="footer-social">
+                    <h3>Connect With Us</h3>
+                    <div class="social-icons">
+                        <a href="#" class="social-btn facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-btn linkedin"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-btn discord"><i class="fab fa-discord"></i></a>
+                        <a href="#" class="social-btn instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                    <p class="contact-email"><i class="fas fa-envelope"></i> support@eds-competition.com</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 EDS Championship. All Rights Reserved.</p>
+                <p>Built with <i class="fas fa-heart" style="color: var(--primary-color);"></i> by Developers.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
