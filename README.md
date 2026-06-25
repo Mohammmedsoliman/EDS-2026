@@ -1,3 +1,4 @@
+![Dashboard](banner.png)
 # EDS 2026 — Grand Championship Platform
 
 ## Overview
